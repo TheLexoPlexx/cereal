@@ -1,0 +1,86 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+// https://dbdiagram.io/d
+
+model Anlage {
+  id             String              @id @default(cuid())
+  bezeichnung    String              @unique
+  teile          Seriennummernteil[]
+  auftragsnummer Int
+  auftrag        Auftrag             @relation(fields: [auftragsnummer], references: [auftragsnummer])
+}
+
+model Seriennummernteil {
+  seriennummer String  @id @map("id")
+  bauteil_id   String
+  bauteil      Bauteil @relation(fields: [bauteil_id], references: [edv_nummer])
+
+  // Zugehörigkeit zu einer Anlage
+  anlage    Anlage? @relation(fields: [anlage_id], references: [id]) //Jedes Teil kann in einer Anlage verbaut sein, oder nicht
+  anlage_id String?
+
+  // Baugruppe/Hierarchie:
+  gruppe               Seriennummernteil[] @relation("hierarchie") //wenn in Gruppe etwas eingetragen ist, dann ist es eine Baugruppe
+  seriennummernteil    Seriennummernteil?  @relation("hierarchie", fields: [seriennummernteil_id], references: [seriennummer])
+  seriennummernteil_id String?
+
+  // Zeiten
+  herstellungsdatum DateTime? //kann optional sein, falls nicht bekannt in Fällen von einem Nachtrag
+  versand           DateTime?
+  einbau_datum      DateTime? //kann optional sein, weil es in der Zukunft liegen kann
+}
+
+model Bauteil {
+  edv_nummer        String              @id @unique @map("id") //aus SAP
+  name              String //am besten eigentlich auch aus SAP, vielleicht Bezeichnung + interne Bezeichnung oder mit extra-Feld
+  seriennummernteil Seriennummernteil[]
+}
+
+// ###################
+
+model Projekt {
+  id            String    @id @default(cuid())
+  projektnummer Int       @unique
+  werk          Werk      @relation(fields: [id], references: [id])
+  auftraege     Auftrag[]
+}
+
+model Auftrag {
+  auftragsnummer Int      @id @map("id")
+  projekt        Projekt  @relation(fields: [projekt_id], references: [id])
+  projekt_id     String
+  anlagen        Anlage[]
+}
+
+// ################### Kunde und Werk existiert, damit der GU übersprungen werden kann, trotzdem muss es ein Feld "GU" geben, damit getrackt werden kann, welcher von denen die meisten Probleme mit unseren Anlagen hat
+model Endkunde {
+  id     String   @id @default(cuid())
+  sap_id String   @unique @default("0") // Anbindung an SAP, zu Entwicklungszwecken "0", das Feld ist absichtlich mit SAP benannt, damit hier nichts überschrieben werden muss beim Umzug auf IFS.
+  werke  Werk[]
+  name   String   @unique
+  alias  String[]
+}
+
+model Generalunternehmer {
+  id     String @id @default(cuid())
+  sap_id String @unique @default("0") // Anbindung an SAP, zu Entwicklungszwecken "0"
+}
+
+model Werk {
+  id           String    @id @default(cuid())
+  kunde        Endkunde  @relation(fields: [endkunden_id], references: [id])
+  endkunden_id String
+  name         String    @unique
+  projekte     Projekt[]
+}

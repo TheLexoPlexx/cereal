@@ -1,0 +1,23 @@
+{
+  "name": "cereal_db",
+  "version": "1.0.0",
+  "description": "Serial Database and Mapping",
+  "scripts": {
+    "prisma studio": "npx prisma studio --browser firefox",
+    "prisma migrate": "npx prisma migrate dev --name init",
+    "prisma forced migrate": "npx prisma migrate dev --name init --skip-generate",
+    "prisma gen": "npx prisma generate",
+    "prisma format": "npx prisma format",
+    "start postgres": "sudo service postgresql start",
+    "npm-upgrade-packages": "ncu -u && npm install"
+  },
+  "author": "Alexander Heuwes",
+  "license": "CC-BY-NC-SA-4.0",
+  "dependencies": {
+    "@prisma/client": "^5.0.0",
+    "prisma": "^5.0.0"
+  },
+  "devDependencies": {
+    "prisma-dbml-generator": "^0.10.0"
+  }
+}
