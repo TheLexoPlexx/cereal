@@ -1,9 +1,11 @@
-use std::process;
-
-use poem::{listener::TcpListener, EndpointExt, Result, Route, Server, web::Data};
-use poem_openapi::{payload::{Json, PlainText}, Object, OpenApi, OpenApiService};
-use sqlx::postgres::PgPool;
 use dotenv::dotenv;
+use poem::{listener::TcpListener, web::Data, EndpointExt, Result, Route, Server};
+use poem_openapi::{
+    payload::{Json, PlainText},
+    Object, OpenApi, OpenApiService,
+};
+use sqlx::postgres::PgPool;
+use std::process;
 
 #[tokio::main]
 async fn main() {
@@ -15,17 +17,19 @@ async fn main() {
         .parse::<u16>()
         .expect("Could not parse Port. Must be valid u16.")
         .to_string();
-    
-    println!("Starting the server on port {:?} ...", port);
+
+    println!("Starting the server on port {:?}...", port);
     let server_adress = "http://localhost:".to_string() + &port;
     let listener_adress = "127.0.0.1:".to_string() + &port;
 
-    let pool = PgPool::connect(db_url.as_str()).await.expect("Failed to connect to database");
-    
+    let pool = PgPool::connect(db_url.as_str())
+        .await
+        .expect("Failed to connect to database");
+
     println!("Connected to database");
 
-    let api_service = OpenApiService::new(SerialnumberApi, "Serial Numbers", "0.1.0")
-        .server(server_adress);
+    let api_service =
+        OpenApiService::new(SerialnumberApi, "Serial Numbers", "0.1.0").server(server_adress);
     let explorer = api_service.openapi_explorer();
     let route = Route::new()
         .nest("/", api_service)
@@ -53,22 +57,23 @@ struct Serialnumberpart {
     // group: Vec<String>, //The idea came from prisma, basically select * from serialnumberpart where serialnumberpart_id = serial
     parent_id: Option<String>,
     manufacturing_date: Option<i32>, // Should be DateTime but for the life of me I couldn't figure out how. Only possible option
-    shipping_date: Option<i32>,      // would be to create an intermediary Type for DateTime where the DB-DateTime is converted
-    installation_date: Option<i32>,  // back and forth but that did not seem like a viable option to me. 
+    shipping_date: Option<i32>, // would be to create an intermediary Type for DateTime where the DB-DateTime is converted
+    installation_date: Option<i32>, // back and forth but that did not seem like a viable option to me.
 }
 
 struct SerialnumberApi;
 
 #[OpenApi]
 impl SerialnumberApi {
-    #[oai(path = "/serialnumberparts", method = "get")] //Why can I not get IntelliSense here?
-    async fn list_serialnumber(&self, pool: Data<&PgPool>, description: PlainText<String>) -> Result<Json<Vec<Serialnumberpart>>> {
-
+    #[oai(path = "/serialnumberparts", method = "get")]
+    async fn list_serialnumber(
+        &self,
+        pool: Data<&PgPool>,
+        description: PlainText<String>,
+    ) -> Result<Json<Vec<Serialnumberpart>>> {
         dbg!(description);
 
-        let serialnumberpart = sqlx::query_as!(
-            Serialnumberpart,
-            "select * from serialnumberpart")
+        let serialnumberpart = sqlx::query_as!(Serialnumberpart, "select * from serialnumberpart")
             .fetch_all(pool.0)
             .await
             .unwrap();

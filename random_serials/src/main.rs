@@ -50,35 +50,18 @@ fn main() {
         }
     }
 
-    let filedialog = FileDialog::new()
+    let pathbuf = FileDialog::new()
         .add_filter("Tabelle", &["csv"])
         .set_file_name("output")
         .set_title("Speichern...")
-        .pick_folder();
-    match filedialog {
-        Some(pathbuf) => match File::create(pathbuf) {
-            
-            Ok(mut file) => {
-                for item in file_output {
-                    match writeln!(file, "{}", item) {
-                        Ok(_) => {}
-                        Err(error) => {
-                            eprintln!("Error writing line {:?}", error);
-                        }
-                    }
-                }
-            }
-            Err(err) => {
-                eprintln!("Failed to open file: {:?}", err);
-            }
-        },
-        None => {
-            eprintln!("Save failed.")
-        }
-    }
+        .pick_folder()
+        .expect("Failed to open file dialog.");
 
+    let mut file = File::create(pathbuf.join("output.csv")).expect("Failed to open file.");
+
+    for item in file_output {
+        writeln!(file, "{}", item).expect("Error to write line in file.")
+    }
     //Tabelle erstellen
     //als csv speichern
-
-    //Rust for Typescript-Devs...
 }
