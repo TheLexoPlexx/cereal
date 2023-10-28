@@ -3,15 +3,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// generator client { //wird nicht mehr benötigt, da wir den Prisma-Client nicht mehr verwenden sondern sqlx in Rust
-//   provider = "prisma-client-js"
-// }
-
 generator dbml {
   provider = "prisma-dbml-generator"
 }
-
-// https://dbdiagram.io/d
 
 model Plant {
   id           String             @id @default(cuid())

@@ -3,15 +3,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 generator dbml {
   provider = "prisma-dbml-generator"
 }
-
-// https://dbdiagram.io/d
 
 model Anlage {
   id             String              @id @default(cuid())
@@ -37,8 +31,8 @@ model Seriennummernteil {
 
   // Zeiten
   herstellungsdatum DateTime? //kann optional sein, falls nicht bekannt in Fällen von einem Nachtrag
-  versand           DateTime?
-  einbau_datum      DateTime? //kann optional sein, weil es in der Zukunft liegen kann
+  versand           DateTime? //kann optional sein, weil es in der Zukunft liegen kann
+  einbaudatum       DateTime? //kann optional sein, weil es in der Zukunft liegen kann
 }
 
 model Bauteil {
