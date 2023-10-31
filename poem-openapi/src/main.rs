@@ -4,9 +4,8 @@ use poem_openapi::OpenApiService;
 use sqlx::postgres::PgPool;
 use std::process;
 
-use crate::generated::API;
+use crate::prisma_openapi::Api;
 
-pub mod generated;
 pub mod prisma_openapi;
 
 #[tokio::main]
@@ -32,7 +31,7 @@ async fn main() {
 
     println!("Connected to database");
 
-    let api_service = OpenApiService::new(API, "Serial Numbers", "0.1.0").server(server_adress);
+    let api_service = OpenApiService::new(Api, "Serial Numbers", "0.1.0").server(server_adress);
     let explorer = api_service.openapi_explorer();
     let route = Route::new()
         .nest("/", api_service)

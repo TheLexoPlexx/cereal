@@ -1,17 +1,15 @@
 // ------------------------------------------------------
 // Generated with github.com/thelexoplexx/prisma-generator-poem-openapi
 // Do not edit manually.
-// ------------------------------------------------------`
+// ------------------------------------------------------
 
+use chrono::{DateTime, FixedOffset};
 use poem::{web::Data, Result};
-use poem_openapi::{
-    payload::{Json, PlainText},
-    Object, OpenApi,
-};
+use poem_openapi::{payload::Json, Object, OpenApi};
 use sqlx::PgPool;
 
 #[derive(Object)]
-pub struct Plant {
+pub struct System {
     id: String,
     label: String,
     order_number: i32,
@@ -20,17 +18,12 @@ pub struct Plant {
 #[derive(Object)]
 pub struct Serialnumberpart {
     serial: String,
-    part_id: String,
-    plant_id: Option<String>,
+    edv_nummer: String,
+    system_id: Option<String>,
     parent_id: Option<String>,
-    manufacturing_date: Option<i32>,
-    shipping_date: Option<i32>,
-    installation_date: Option<i32>,
-}
-
-#[derive(Object)]
-pub struct Part {
-    part_number: String,
+    manufacturing_date: Option<DateTime<FixedOffset>>,
+    shipping_date: Option<DateTime<FixedOffset>>,
+    installation_date: Option<DateTime<FixedOffset>>,
 }
 
 #[derive(Object)]
@@ -46,15 +39,15 @@ pub struct Order {
 }
 
 #[derive(Object)]
-pub struct Final_Customer {
+pub struct FinalCustomer {
     id: String,
     sap_id: String,
     name: String,
-    alias: Vec<String>,
+    alias: Option<Vec<String>>,
 }
 
 #[derive(Object)]
-pub struct Prime_Contractor {
+pub struct PrimeContractor {
     id: String,
     sap_id: String,
 }
@@ -66,16 +59,16 @@ pub struct Factory {
     name: String,
 }
 
-pub struct API;
+pub struct Api;
 
 #[OpenApi]
-impl API {
-    #[oai(path = "/plant", method = "get")]
-    async fn get_plant(&self, pool: Data<&PgPool>) -> Result<Json<Vec<Plant>>> {
-        let get = sqlx::query_as!(Plant, "SELECT * FROM \"plant\"")
+impl Api {
+    #[oai(path = "/system", method = "get")]
+    async fn get_system(&self, pool: Data<&PgPool>) -> Result<Json<Vec<System>>> {
+        let get = sqlx::query_as!(System, "SELECT * FROM \"System\"")
             .fetch_all(pool.0)
             .await
-            .expect("Failed to get plant");
+            .expect("Failed to get System");
         Ok(Json(get))
     }
 
@@ -84,67 +77,55 @@ impl API {
         &self,
         pool: Data<&PgPool>,
     ) -> Result<Json<Vec<Serialnumberpart>>> {
-        let get = sqlx::query_as!(Serialnumberpart, "SELECT * FROM \"serialnumberpart\"")
+        let get = sqlx::query_as!(Serialnumberpart, "SELECT * FROM \"Serialnumberpart\"")
             .fetch_all(pool.0)
             .await
-            .expect("Failed to get serialnumberpart");
-        Ok(Json(get))
-    }
-
-    #[oai(path = "/part", method = "get")]
-    async fn get_part(&self, pool: Data<&PgPool>) -> Result<Json<Vec<Part>>> {
-        let get = sqlx::query_as!(Part, "SELECT * FROM \"part\"")
-            .fetch_all(pool.0)
-            .await
-            .expect("Failed to get part");
+            .expect("Failed to get Serialnumberpart");
         Ok(Json(get))
     }
 
     #[oai(path = "/project", method = "get")]
     async fn get_project(&self, pool: Data<&PgPool>) -> Result<Json<Vec<Project>>> {
-        let get = sqlx::query_as!(Project, "SELECT * FROM \"project\"")
+        let get = sqlx::query_as!(Project, "SELECT * FROM \"Project\"")
             .fetch_all(pool.0)
             .await
-            .expect("Failed to get project");
+            .expect("Failed to get Project");
         Ok(Json(get))
     }
 
     #[oai(path = "/order", method = "get")]
     async fn get_order(&self, pool: Data<&PgPool>) -> Result<Json<Vec<Order>>> {
-        let get = sqlx::query_as!(Order, "SELECT * FROM \"order\"")
+        let get = sqlx::query_as!(Order, "SELECT * FROM \"Order\"")
             .fetch_all(pool.0)
             .await
-            .expect("Failed to get order");
+            .expect("Failed to get Order");
         Ok(Json(get))
     }
 
-    #[oai(path = "/final_customer", method = "get")]
-    async fn get_final_customer(&self, pool: Data<&PgPool>) -> Result<Json<Vec<Final_Customer>>> {
-        let get = sqlx::query_as!(Final_Customer, "SELECT * FROM \"final_customer\"")
+    #[oai(path = "/finalcustomer", method = "get")]
+    async fn get_finalcustomer(&self, pool: Data<&PgPool>) -> Result<Json<Vec<FinalCustomer>>> {
+        let get = sqlx::query_as!(FinalCustomer, "SELECT * FROM \"FinalCustomer\"")
             .fetch_all(pool.0)
             .await
-            .expect("Failed to get final_customer");
+            .expect("Failed to get FinalCustomer");
         Ok(Json(get))
     }
 
-    #[oai(path = "/prime_contractor", method = "get")]
-    async fn get_prime_contractor(
-        &self,
-        pool: Data<&PgPool>,
-    ) -> Result<Json<Vec<Prime_Contractor>>> {
-        let get = sqlx::query_as!(Prime_Contractor, "SELECT * FROM \"prime_contractor\"")
+    #[oai(path = "/primecontractor", method = "get")]
+    async fn get_primecontractor(&self, pool: Data<&PgPool>) -> Result<Json<Vec<PrimeContractor>>> {
+        let get = sqlx::query_as!(PrimeContractor, "SELECT * FROM \"PrimeContractor\"")
             .fetch_all(pool.0)
             .await
-            .expect("Failed to get prime_contractor");
+            .expect("Failed to get PrimeContractor");
         Ok(Json(get))
     }
 
     #[oai(path = "/factory", method = "get")]
     async fn get_factory(&self, pool: Data<&PgPool>) -> Result<Json<Vec<Factory>>> {
-        let get = sqlx::query_as!(Factory, "SELECT * FROM \"factory\"")
+        let get = sqlx::query_as!(Factory, "SELECT * FROM \"Factory\"")
             .fetch_all(pool.0)
             .await
-            .expect("Failed to get factory");
+            .expect("Failed to get Factory");
         Ok(Json(get))
     }
 }

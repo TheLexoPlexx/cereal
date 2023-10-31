@@ -215,14 +215,16 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chrono"
-version = "0.4.26"
+version = "0.4.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec837a71355b28f6556dbd569b37b3f363091c0bd4b2e735674521b4c5fd9bc5"
+checksum = "7f2c685bad3eb3d45a01354cedb7d5faa66194d1d58ba6e267a8de788f79db38"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
+ "js-sys",
  "num-traits",
- "winapi",
+ "wasm-bindgen",
+ "windows-targets",
 ]
 
 [[package]]
@@ -1269,6 +1271,7 @@ checksum = "9eae4ceebc38a0d3b74cbf925f3832c940a1cf24bf74a39300e66857c5852a0a"
 dependencies = [
  "base64 0.21.2",
  "bytes",
+ "chrono",
  "derive_more",
  "futures-util",
  "mime",
@@ -1307,6 +1310,7 @@ dependencies = [
 name = "poem_openapi"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "dotenv",
  "poem",
  "poem-openapi",
@@ -1605,9 +1609,9 @@ dependencies = [
 
 [[package]]
 name = "slab"
-version = "0.4.8"
+version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6528351c9bc8ab22353f9d776db39a20288e8d6c37ef8cfe3317cf875eecfc2d"
+checksum = "8f92a496fb766b417c996b9c5e57daf2f7ad3b0bebe1ccfca4856390e3d3bb67"
 dependencies = [
  "autocfg",
 ]
