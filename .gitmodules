@@ -1,0 +1,3 @@
+[submodule "prisma-generator-poem-openapi"]
+	path = prisma-generator-poem-openapi
+	url = ./prisma-generator-poem-openapi
