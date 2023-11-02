@@ -208,6 +208,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "50d30906286121d95be3d479533b458f87493b30a4b5f79a607db8f5d11aa91f"
 
 [[package]]
+name = "cereal-poem"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "dotenv",
+ "poem",
+ "poem-openapi",
+ "sqlx",
+ "tokio",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1304,18 +1316,6 @@ dependencies = [
  "regex",
  "syn 2.0.27",
  "thiserror",
-]
-
-[[package]]
-name = "poem_openapi"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "dotenv",
- "poem",
- "poem-openapi",
- "sqlx",
- "tokio",
 ]
 
 [[package]]
