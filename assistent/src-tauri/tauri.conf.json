@@ -31,8 +31,8 @@
         "fullscreen": false,
         "resizable": true,
         "title": "assistent",
-        "width": 800,
-        "height": 600
+        "width": 500,
+        "height": 900
       }
     ]
   },
