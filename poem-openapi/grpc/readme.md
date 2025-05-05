@@ -1,1 +1,0 @@
-//TODO: [Example](https://github.com/poem-web/poem/blob/master/examples/grpc/helloworld/proto/helloworld.proto)
